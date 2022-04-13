@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kun.oa.mapper.UserMapper">
+    <!--<resultMap id="UserEntityMap" type="com.kun.oa.entity.User">-->
+        <!--<id column="id" property="id"/>-->
+        <!--<result column="created_user" property="createdUser"/>-->
+        <!--<result column="created_time" property="createdTime"/>-->
+        <!--<result column="modified_user" property="modifiedUser"/>-->
+        <!--<result column="modified_time" property="modifiedTime"/>-->
+    <!--</resultMap>-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+            personnel (username,password,salt,phone,sex,carID,address,
+                    kind,state,monthPay,carNum,createdUser,createdTime,modifiedUser,modifiedTime)
+        VALUES
+            (#{username}, #{password}, #{salt}, #{phone}, #{sex}, #{carID},
+             #{address}, #{kind}, #{state}, #{monthPay},#{carNum}, #{createdUser}, #{createdTime}, #{modifiedUser}, #{modifiedTime})
+    </insert>
+    <select id="findByUsername" resultType="com.kun.oa.entity.User" >
+        SELECT * FROM personnel WHERE username = #{username}
+    </select>
+    <select id="findPeople" resultType="com.kun.oa.entity.User">
+        SELECT * FROM personnel WHERE state = 2
+    </select>
+    <update id="updatePasswordByUid">
+UPDATE t_user SET
+                  password = #{password},
+                  modified_user = #{modifiedUser},
+                  modified_time = #{modifiedTime} WHERE uid = #{uid} </update>
+    <!-- 根据用户id查询用户数据：User findByUid(Integer uid) -->
+    <select id="findByUid" resultType="com.kun.oa.entity.User"> SELECT * FROM t_user WHERE uid = #{uid} </select>
+    <!-- 根据uid更新用户个人资料：Integer updateInfoByUid(User user) -->
+    <update id="updateInfoByUid"> UPDATE t_user SET
+<if test="phone != null">phone = #{phone},</if>
+<if test="email != null">email = #{email},</if>
+<if test="gender != null">gender = #{gender},</if>
+modified_user = #{modifiedUser}, modified_time = #{modifiedTime} WHERE uid = #{uid}
+ </update>
+    <update id="updatePhoto"> UPDATE t_user SET
+        avatar = #{avatar}, modified_time = #{modifiedTime} WHERE uid = #{uid}
+    </update>
+<delete id="delePeople">
+    DELETE FROM personnel WHERE id = #{id};
+</delete>
+
+</mapper>
